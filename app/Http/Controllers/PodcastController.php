@@ -8,21 +8,14 @@ use App\Services\Podcast\CreatePodcastService;
 use App\Services\Podcast\Processor\Processor;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class PodcastController extends Controller
 {
     public function __construct(private Processor $processor)
-    {
-    }
+    {}
 
-    public function uploadPodcast(UploadPodcastRequest $request, CreatePodcastService $podcastService)
+    public function uploadPodcast(UploadPodcastRequest $request, CreatePodcastService $podcastService): JsonResponse
     {
-//        $file = file_get_contents('../storage/app/podcasts/bvKcUylEaWGQN1qaw0TDxIq1ofhIz0R0tbbvPeFl.mp3');
-//        $podcast = Podcast::first();
-//        $podcast->uploaded_file_name = 'bvKcUylEaWGQN1qaw0TDxIq1ofhIz0R0tbbvPeFl.mp3';
-//        $podcast->save();
-
         /** @var UploadedFile $file */
         $file = $request->file('file');
 
