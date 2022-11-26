@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Podcast;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\Exception\AuthenticationException;
@@ -35,5 +36,32 @@ class ElasticSearch
             'id' => $id,
             'body' => $content,
         ]);
+    }
+
+    /**
+     * @throws ClientResponseException
+     * @throws ServerResponseException
+     */
+    public function getBySearch(string $search): array
+    {
+        $result = $this->client->search([
+            'index' => 'podcasts',
+            'body' => [
+                'query' => [
+                    'match' => (object)[
+                        'text_contents' => [
+                            'query' => $search,
+                        ],
+                    ],
+                ],
+            ],
+        ])->asObject();
+
+        $ids = collect($result->hits->hits)
+            ->pluck('_id');
+
+        return Podcast::whereIn('id', $ids)
+            ->get()
+            ->toArray();
     }
 }

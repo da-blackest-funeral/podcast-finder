@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PodcastSearchRequest;
 use App\Http\Requests\UploadPodcastRequest;
 use App\Models\Podcast;
+use App\Services\ElasticSearch;
 use App\Services\Podcast\CreatePodcastService;
 use App\Services\Podcast\Processor\Processor;
+use Elastic\Elasticsearch\Exception\ClientResponseException;
+use Elastic\Elasticsearch\Exception\ServerResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
 class PodcastController extends Controller
@@ -28,5 +33,19 @@ class PodcastController extends Controller
         return new JsonResponse([
             'message' => 'Подкаст успешно загружен и обрабатывается.'
         ]);
+    }
+
+    public function index(Request $request)
+    {
+        return Podcast::paginate(20);
+    }
+
+    /**
+     * @throws ServerResponseException
+     * @throws ClientResponseException
+     */
+    public function search(PodcastSearchRequest $request, ElasticSearch $elasticSearch): array
+    {
+        return $elasticSearch->getBySearch($request->search);
     }
 }

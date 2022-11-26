@@ -21,5 +21,8 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/upload', [PodcastController::class, 'uploadPodcast']);
-    Route::get('/search', []);
+
+    Route::get('/search', [PodcastController::class, 'search']);
+
+    Route::get('/podcasts', [PodcastController::class, 'index']);
 });
