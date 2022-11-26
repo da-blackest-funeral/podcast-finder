@@ -42,7 +42,7 @@ class ElasticSearch
      * @throws ClientResponseException
      * @throws ServerResponseException
      */
-    public function getBySearch(string $search): array
+    public function getBySearch(string $search)
     {
         $result = $this->client->search([
             'index' => 'podcasts',
@@ -62,8 +62,8 @@ class ElasticSearch
         $podcasts = Podcast::findMany($collection->pluck('_id'))
             ->each(function (Podcast $podcast) use ($collection) {
                 $podcast->score = $collection->where('_id', $podcast->id)->first()['_score'];
-            })->sort(fn($podcast) => $podcast->score)->values();
+            })->sortByDesc('score')->values();
 
-        return $podcasts->toArray();
+        return $podcasts;
     }
 }

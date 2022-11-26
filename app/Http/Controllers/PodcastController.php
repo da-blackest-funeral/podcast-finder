@@ -44,7 +44,7 @@ class PodcastController extends Controller
      * @throws ServerResponseException
      * @throws ClientResponseException
      */
-    public function search(PodcastSearchRequest $request, ElasticSearch $elasticSearch): array
+    public function search(PodcastSearchRequest $request, ElasticSearch $elasticSearch)
     {
         return $elasticSearch->getBySearch($request->search);
     }
