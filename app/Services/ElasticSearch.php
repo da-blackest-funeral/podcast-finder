@@ -55,13 +55,15 @@ class ElasticSearch
                     ],
                 ],
             ],
-        ])->asObject();
+        ])->asArray();
 
-        $ids = collect($result->hits->hits)
-            ->pluck('_id');
+        $collection = collect($result['hits']['hits']);
 
-        return Podcast::whereIn('id', $ids)
-            ->get()
-            ->toArray();
+        $podcasts = Podcast::findMany($collection->pluck('_id'))
+            ->each(function (Podcast $podcast) use ($collection) {
+                $podcast->score = $collection->where('_id', $podcast->id)->first()['_score'];
+            })->sort(fn($podcast) => $podcast->score)->values();
+
+        return $podcasts->toArray();
     }
 }
