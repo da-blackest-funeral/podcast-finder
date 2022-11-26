@@ -4,6 +4,7 @@ namespace App\Services\Podcast\Uploader;
 
 use App\DTO\UploadResponse;
 use App\Models\Podcast;
+use Illuminate\Support\Facades\Storage;
 
 class AssemblyAIUploader implements PodcastUploader
 {
@@ -35,18 +36,13 @@ class AssemblyAIUploader implements PodcastUploader
             CURLOPT_URL => config('assembly_ai.upload_endpoint'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => file_get_contents($this->getFileName()),
+            CURLOPT_POSTFIELDS => Storage::get($this->podcast->uploaded_file_name),
             CURLOPT_HTTPHEADER => [
                 "authorization: $this->apiToken",
             ],
         ]);
 
         return $curl;
-    }
-
-    private function getFileName(): string
-    {
-        return "../storage/app/podcasts/{$this->podcast->uploaded_file_name}";
     }
 
     private function submitRequest($curl): bool|string

@@ -15,8 +15,6 @@ class GetTranscriptionResultJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private ElasticSearch $elasticSearch;
-
     /**
      * Create a new job instance.
      *
@@ -26,23 +24,23 @@ class GetTranscriptionResultJob implements ShouldQueue
         private Podcast $podcast,
         private Transcriptor $transcriptor,
         private string $transcriptionId,
-    )
-    {}
+    ) {
+    }
 
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $this->elasticSearch = new ElasticSearch();
+        $elasticSearch = new ElasticSearch();
 
         $result = $this->transcriptor->getResult($this->transcriptionId);
 
         $this->podcast->text_contents = $result->text;
 
-        $this->elasticSearch->addToIndex($this->podcast->id, [
+        $elasticSearch->addToIndex($this->podcast->id, [
             'text_contents' => $this->podcast->text_contents,
         ]);
 

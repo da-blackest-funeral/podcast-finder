@@ -92,7 +92,3 @@ use Illuminate\Support\Facades\Storage;
 //        echo $response;
 //    }
 //});
-
-Route::get('/', static fn() => view('welcome'));
-
-Route::post('/upload', [PodcastController::class, 'uploadPodcast']);

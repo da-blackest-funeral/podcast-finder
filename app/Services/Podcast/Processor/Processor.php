@@ -7,5 +7,5 @@ use App\Models\Podcast;
 
 interface Processor
 {
-    public function process(Podcast $podcast);
+    public function process(Podcast $podcast): void;
 }

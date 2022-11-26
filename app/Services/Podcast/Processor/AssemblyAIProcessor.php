@@ -21,11 +21,11 @@ class AssemblyAIProcessor implements Processor
         private PodcastUploader $uploader,
         private Transcriptor $transcriptor,
     ) {
-        $this->uploader = new MockUploader;
-        $this->transcriptor = new MockTranscriptor;
+//        $this->uploader = new MockUploader;
+//        $this->transcriptor = new MockTranscriptor;
     }
 
-    public function process(Podcast $podcast)
+    public function process(Podcast $podcast): void
     {
         $this->podcast = $podcast;
 
@@ -50,7 +50,7 @@ class AssemblyAIProcessor implements Processor
             ->delay($delay);
     }
 
-    private function getDelay()
+    private function getDelay(): int
     {
         return 150;
     }
