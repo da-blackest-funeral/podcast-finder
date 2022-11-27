@@ -59,11 +59,9 @@ class ElasticSearch
 
         $collection = collect($result['hits']['hits']);
 
-        $podcasts = Podcast::findMany($collection->pluck('_id'))
+        return Podcast::findMany($collection->pluck('_id'))
             ->each(function (Podcast $podcast) use ($collection) {
                 $podcast->score = $collection->where('_id', $podcast->id)->first()['_score'];
             })->sortByDesc('score')->values();
-
-        return $podcasts;
     }
 }
