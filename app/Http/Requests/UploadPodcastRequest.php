@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @property string $name
+ * @property float|int $duration
  */
 class UploadPodcastRequest extends FormRequest
 {

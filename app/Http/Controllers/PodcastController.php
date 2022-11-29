@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\CreatePodcastDTO;
 use App\Http\Requests\PodcastSearchRequest;
 use App\Http\Requests\UploadPodcastRequest;
 use App\Models\Podcast;
@@ -26,7 +27,13 @@ class PodcastController extends Controller
 
         $path = $file->storeAs('/', time() . $file->getClientOriginalName());
 
-        $podcast = $podcastService->create($file, $path);
+        $dto = new CreatePodcastDTO(
+            path: $path,
+            name: $request->name ?? $file->getClientOriginalName(),
+            duration: (int) $request->duration
+        );
+
+        $podcast = $podcastService->create($dto);
 
         $this->processor->process($podcast);
 
