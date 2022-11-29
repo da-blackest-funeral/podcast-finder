@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\PodcastProceeded;
 use App\Models\Podcast;
 use App\Services\ElasticSearch;
 use App\Services\Podcast\Transcriptor\Transcriptor;
@@ -44,6 +45,8 @@ class GetTranscriptionResultJob implements ShouldQueue
             'text_contents' => $this->podcast->text_contents,
         ]);
 
-        $this->podcast->save();
+        $this->podcast->saveOrFail();
+
+        event(new PodcastProceeded($this->podcast));
     }
 }

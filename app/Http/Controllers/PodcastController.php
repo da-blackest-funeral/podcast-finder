@@ -37,9 +37,7 @@ class PodcastController extends Controller
 
         $podcast = $podcastService->create($dto);
 
-        PodcastProceeded::dispatch($podcast);
-
-//        $this->processor->process($podcast);
+        $this->processor->process($podcast);
 
         return new JsonResponse([
             'message' => 'Подкаст успешно загружен и обрабатывается.'
