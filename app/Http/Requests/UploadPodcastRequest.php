@@ -28,7 +28,8 @@ class UploadPodcastRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'file' => 'mimes:mp3,',
+            'name' => ['string', 'nullable'],
         ];
     }
 }

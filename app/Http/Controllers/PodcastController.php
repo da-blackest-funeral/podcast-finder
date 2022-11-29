@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\CreatePodcastDTO;
+use App\Events\PodcastProceeded;
 use App\Http\Requests\PodcastSearchRequest;
 use App\Http\Requests\UploadPodcastRequest;
 use App\Models\Podcast;
@@ -14,6 +15,7 @@ use Elastic\Elasticsearch\Exception\ServerResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 
 class PodcastController extends Controller
 {
@@ -35,7 +37,9 @@ class PodcastController extends Controller
 
         $podcast = $podcastService->create($dto);
 
-        $this->processor->process($podcast);
+        PodcastProceeded::dispatch($podcast);
+
+//        $this->processor->process($podcast);
 
         return new JsonResponse([
             'message' => 'Подкаст успешно загружен и обрабатывается.'

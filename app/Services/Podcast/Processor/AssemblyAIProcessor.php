@@ -52,6 +52,6 @@ class AssemblyAIProcessor implements Processor
 
     private function getDelay(): int
     {
-        return 150;
+        return (int) ($this->podcast->duration / 2);
     }
 }
