@@ -29,7 +29,7 @@ class PodcastProceeded implements ShouldBroadcast
      */
     public function broadcastOn(): Channel|PrivateChannel
     {
-        return new Channel("podcasts.{$this->podcast->id}");
+        return new Channel("podcasts");
     }
 
     public function broadcastAs(): string
