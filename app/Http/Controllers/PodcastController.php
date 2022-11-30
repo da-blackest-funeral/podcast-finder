@@ -48,6 +48,7 @@ class PodcastController extends Controller
     public function index(Request $request)
     {
         return Podcast::whereNotNull('text_contents')
+            ->orderByDesc('id')
             ->paginate(20);
     }
 
