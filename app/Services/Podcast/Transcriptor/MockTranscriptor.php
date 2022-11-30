@@ -13,8 +13,12 @@ class MockTranscriptor implements Transcriptor
         return new StartTranscriptionResponse('rb6rrlewov-6430-49cd-9191-9ae8f0d466ae');
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function getResult(string $transcriptionId): TranscriptionResult
     {
-
+        return (new AssemblyAITrancriptor())
+            ->getResult($transcriptionId);
     }
 }
