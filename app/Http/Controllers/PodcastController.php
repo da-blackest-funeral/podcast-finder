@@ -40,7 +40,8 @@ class PodcastController extends Controller
         $this->processor->process($podcast);
 
         return new JsonResponse([
-            'message' => 'Подкаст успешно загружен и обрабатывается.'
+            'message' => 'Подкаст успешно загружен и обрабатывается.',
+            'data' => $podcast,
         ]);
     }
 

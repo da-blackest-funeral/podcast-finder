@@ -19,6 +19,8 @@ class BroadcastServiceProvider extends ServiceProvider
 
         require base_path('routes/channels.php');
 
-        Broadcast::channel('podcasts', fn() => true);
+        Broadcast::channel("podcasts.{podcast}", function ($user, Podcast $podcast) {
+            return $user->id === $podcast->user_id;
+        });
     }
 }
