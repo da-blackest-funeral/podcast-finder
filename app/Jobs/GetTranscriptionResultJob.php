@@ -16,11 +16,8 @@ class GetTranscriptionResultJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
+    public int $tries = 3;
+
     public function __construct(
         private Podcast $podcast,
         private Transcriptor $transcriptor,
@@ -28,11 +25,6 @@ class GetTranscriptionResultJob implements ShouldQueue
     ) {
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle(): void
     {
         $elasticSearch = new ElasticSearch();
