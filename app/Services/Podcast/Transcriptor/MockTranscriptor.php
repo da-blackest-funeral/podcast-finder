@@ -10,7 +10,7 @@ class MockTranscriptor implements Transcriptor
 {
     public function startTranscription(Podcast $podcast, string $uploadUrl): StartTranscriptionResponse
     {
-        return new StartTranscriptionResponse('rb6rrlewov-6430-49cd-9191-9ae8f0d466ae');
+        return new StartTranscriptionResponse('rbcop3zwlq-6b5e-4866-b83f-3e98a81a76a6');
     }
 
     /**

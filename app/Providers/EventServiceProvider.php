@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\PodcastUploaded;
+use App\Services\Podcast\Processor\Processor;
+use App\Services\Podcast\Transcriptor\Transcriptor;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
@@ -20,21 +24,14 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
     public function boot()
     {
-        //
+        Event::listen(static function (PodcastUploaded $event) {
+            app(Processor::class)
+                ->transcript($event);
+        });
     }
 
-    /**
-     * Determine if events and listeners should be automatically discovered.
-     *
-     * @return bool
-     */
     public function shouldDiscoverEvents()
     {
         return false;

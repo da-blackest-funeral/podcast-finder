@@ -4,7 +4,9 @@ namespace App\Services\Podcast\Processor;
 
 use App\DTO\StartTranscriptionResponse;
 use App\DTO\UploadResponse;
+use App\Events\PodcastUploaded;
 use App\Jobs\GetTranscriptionResultJob;
+use App\Jobs\UploadToAssemblyAIJob;
 use App\Models\Podcast;
 use App\Services\ElasticSearch;
 use App\Services\Podcast\Transcriptor\MockTranscriptor;
@@ -15,34 +17,32 @@ use Illuminate\Support\Facades\Storage;
 
 class AssemblyAIProcessor implements Processor
 {
-    private Podcast $podcast;
-
     public function __construct(
         private PodcastUploader $uploader,
         private Transcriptor $transcriptor,
     ) {
-//        $this->uploader = new MockUploader;
-//        $this->transcriptor = new MockTranscriptor;
     }
 
     public function process(Podcast $podcast): void
     {
-        $this->podcast = $podcast;
-
-        $uploadResponse = $this->uploader->upload($podcast);
-
-        $this->transcript($uploadResponse);
+        dispatch(new UploadToAssemblyAIJob(
+            $this->uploader,
+            $podcast
+        ))->onQueue('podcasts');
     }
 
-    private function transcript(UploadResponse $responseDTO): void
+    public function transcript(PodcastUploaded $event): void
     {
-        $data = $this->transcriptor->startTranscription($this->podcast, $responseDTO->uploadUrl);
+        $responseDTO = $event->responseDTO;
+        $podcast = $event->podcast;
 
-        $delay = $this->getDelay();
+        $data = $this->transcriptor->startTranscription($podcast, $responseDTO->uploadUrl);
+
+        $delay = $this->getDelay($podcast);
 
         dispatch(
             new GetTranscriptionResultJob(
-                $this->podcast,
+                $podcast,
                 app(Transcriptor::class),
                 $data->transcriptionId,
             )
@@ -50,8 +50,8 @@ class AssemblyAIProcessor implements Processor
             ->delay($delay);
     }
 
-    private function getDelay(): int
+    private function getDelay(Podcast $podcast): int
     {
-        return (int) ($this->podcast->duration / 2);
+        return (int) ($podcast->duration / 2);
     }
 }

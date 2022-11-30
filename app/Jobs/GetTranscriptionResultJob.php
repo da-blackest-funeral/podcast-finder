@@ -17,6 +17,8 @@ class GetTranscriptionResultJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+    
+    public int $backoff = 30;
 
     public function __construct(
         private Podcast $podcast,

@@ -20,8 +20,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+//        $this->app->bind(Transcriptor::class, AssemblyAITrancriptor::class);
         $this->app->bind(Transcriptor::class, MockTranscriptor::class);
+
         $this->app->bind(PodcastUploader::class, AssemblyAIUploader::class);
+
         $this->app->bind(Processor::class, function () {
             return new AssemblyAIProcessor(
                 $this->app->make(PodcastUploader::class),
